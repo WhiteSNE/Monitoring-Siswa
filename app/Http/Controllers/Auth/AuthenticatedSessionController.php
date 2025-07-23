@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use Illuminate\Validation\ValidationException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -24,11 +25,33 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
-        $request->authenticate();
-
+        $request->validate([
+            'email' => ['required', 'string', 'email'],
+            'password' => ['required', 'string'],
+        ]);
+    
+        if (! Auth::attempt($request->only('email', 'password'), $request->filled('remember'))) {
+            throw ValidationException::withMessages([
+                'email' => __('auth.failed'),
+            ]);
+        }
+    
         $request->session()->regenerate();
-
-        return redirect()->intended(route('dashboard', absolute: false));
+    
+        // Redirect berdasarkan role
+        $user = Auth::user();
+        if ($user->role === 'admin') {
+            return redirect()->route('admin.dashboard');
+        } elseif ($user->role === 'guru') {
+            return redirect()->route('guru.dashboard'); // Buat nanti
+        } elseif ($user->role === 'murid') {
+            return redirect()->route('murid.dashboard'); // Buat nanti
+        } elseif ($user->role === 'dudi') {
+            return redirect()->route('dudi.dashboard'); // Buat nanti
+        }
+    
+        return redirect()->route('dashboard'); // Fallback
+    
     }
 
     /**

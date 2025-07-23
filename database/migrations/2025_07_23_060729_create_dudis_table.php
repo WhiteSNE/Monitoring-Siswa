@@ -11,12 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('gurus', function (Blueprint $table) {
+        Schema::create('dudis', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->string('nip', 20)->unique();
-            $table->string('nama_lengkap');
-            $table->string('no_telepon', 20)->nullable();
+            $table->string('nama_perusahaan');
+            $table->text('alamat');
+            $table->string('email_perusahaan', 20)->nullable();
+            $table->string('no_telepon_perusahaan', 20)->nullable();
+            $table->string('nama_pic');
+            $table->text('deskripi')->nullable();
             $table->timestamps();
         });
     }
@@ -26,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('gurus');
+        Schema::dropIfExists('dudis');
     }
 };
