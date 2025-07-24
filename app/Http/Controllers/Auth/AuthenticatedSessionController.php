@@ -44,7 +44,7 @@ class AuthenticatedSessionController extends Controller
             return redirect()->route('admin.dashboard');
         } elseif ($user->role === 'guru') {
             return redirect()->route('guru.dashboard'); // Buat nanti
-        } elseif ($user->role === 'murid') {
+        } elseif ($user->role === 'siswa') {
             return redirect()->route('murid.dashboard'); // Buat nanti
         } elseif ($user->role === 'dudi') {
             return redirect()->route('dudi.dashboard'); // Buat nanti

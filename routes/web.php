@@ -7,6 +7,18 @@ use App\Http\Middleware\RoleMiddleware;
 // Daftar alias middleware 'role'
 Route::aliasMiddleware('role', RoleMiddleware::class);
 
+Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
+    Route::view('/datasiswa', 'admin.datasiswa')->name('admin.datasiswa');
+    Route::view('/dataguru', 'admin.dataguru')->name('admin.dataguru');
+    Route::view('/datadudi', 'admin.datadudi')->name('admin.datadudi');
+    Route::view('/dokumen', 'admin.dokumen')->name('admin.dokumen');
+    Route::view('/nilai', 'admin.nilai')->name('admin.nilai');
+    Route::view('/role', 'admin.role')->name('admin.role');
+    Route::view('/kelas', 'admin.kelas')->name('admin.kelas');
+    Route::view('/jabatan', 'admin.jabatan')->name('admin.jabatan');
+    Route::view('/jurusan', 'admin.jurusan')->name('admin.jurusan');
+});
+
 // Default halaman login
 Route::get('/', function () {
     return view('loginpage');
@@ -17,6 +29,24 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/dashboard', function () {
         return view('admin.dashboard');
     })->name('admin.dashboard');
+});
+
+Route::middleware(['auth', 'role:guru'])->group(function () {
+    Route::get('/guru/dashboard', function () {
+        return view('guru.dashboard');
+    })->name('guru.dashboard');
+});
+
+Route::middleware(['auth', 'role:dudi'])->group(function () {
+    Route::get('/dudi/dashboard', function () {
+        return view('dudi.dashboard');
+    })->name('dudi.dashboard');
+});
+
+Route::middleware(['auth', 'role:siswa'])->group(function () {
+    Route::get('/murid/dashboard', function () {
+        return view('murid.dashboard');
+    })->name('murid.dashboard');
 });
 
 // General dashboard (bisa untuk user biasa)
@@ -30,5 +60,6 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
 
 require __DIR__.'/auth.php';

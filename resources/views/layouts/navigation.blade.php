@@ -1,3 +1,17 @@
+@php
+    $userRole = Auth::user()->role ?? 'guest';
+    
+    $roleBasedDashboard = [
+        'admin' => route('admin.dashboard'),
+        'guru' => route('guru.dashboard'),
+        'dudi' => route('dudi.dashboard'),
+        'siswa' => route('murid.dashboard'),
+        ];
+
+    $dashboardUrl = $roleBasedDashboard[$userRole] ?? route('dashboard');
+
+@endphp
+
 <nav x-data="{ open: false }" class="bg-white border-b border-gray-100">
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -6,8 +20,9 @@
             <div class="flex items-start">
                 <!-- Navigation Links -->
                 <div class="hidden sm:flex">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')"
-                    class="text-2xl font-semibold text-gray-600">
+                    <x-nav-link :href="$dashboardUrl"
+                                :active="request()->url() === $dashboardUrl"
+                                class="text-2xl font-semibold text-gray-600">
                         {{ __('Dashboard Admin') }}
                     </x-nav-link>
                 </div>
