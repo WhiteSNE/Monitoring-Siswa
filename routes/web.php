@@ -19,6 +19,24 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::view('/jurusan', 'admin.jurusan')->name('admin.jurusan');
 });
 
+Route::prefix('guru')->middleware(['auth', 'role:guru'])->group(function(){
+    Route::view('/bimbingan', 'guru.bimbingan')->name('guru.bimbingan');
+    Route::view('/dokumen', 'guru.dokumen')->name('guru.dokumen');
+    Route::view('/jurnal', 'guru.jurnal')->name('guru.jurnal');
+    Route::view('/nilai', 'guru.nilai')->name('guru.nilai');
+});
+
+Route::prefix('dudi')->middleware(['auth', 'role:dudi'])->group(function(){
+    Route::view('/jurnal', 'dudi.jurnal')->name('dudi.jurnal');
+    Route::view('/nilai', 'dudi.nilai')->name('dudi.nilai');
+});
+
+Route::prefix('murid')->middleware(['auth', 'role:siswa'])->group(function(){
+    Route::view('/jurnal', 'murid.jurnal')->name('murid.jurnal');
+    Route::view('/dokumen', 'murid.dokumen')->name('murid.dokumen');
+});
+
+
 // Default halaman login
 Route::get('/', function () {
     return view('loginpage');
