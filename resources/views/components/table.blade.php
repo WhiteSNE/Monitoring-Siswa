@@ -11,7 +11,7 @@
             @foreach ($rows as $row)
                 <tr>
                     @foreach ($row as $cell)
-                        <td class="px-4 py-2 bg-white text-md">{!! $cell !!}</td>
+                        <td class="px-4 py-4 bg-white text-md">{!! $cell !!}</td>
                     @endforeach
                 </tr>
             @endforeach

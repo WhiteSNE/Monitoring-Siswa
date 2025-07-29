@@ -26,7 +26,7 @@
     </div>
 
     <div>
-        <label>PIC</label>
+        <label>Penanggung Jawab</label>
         <input type="text" name="nama_pic" value="{{ old('nama_pic', $dudi->nama_pic) }}" class="w-full border rounded" required>
     </div>
 

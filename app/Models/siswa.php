@@ -3,6 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Jurusan;
+use App\Models\Kelas;
+
 
 class siswa extends Model
 {

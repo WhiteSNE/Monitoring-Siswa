@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('siswas', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->string('nisn, 20')->unique();
+            $table->string('nisn', 20)->unique();
             $table->string('nama_lengkap');
             $table->foreignId('jurusan_id')->constrained('jurusans')->onDelete('restrict');
             $table->foreignId('kelas_id')->constrained('kelas')->onDelete('restrict');

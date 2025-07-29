@@ -1,17 +1,18 @@
 <?php
 
-use App\Http\Controllers\Admin\DudiController;
-use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\RoleMiddleware;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Admin\DudiController;
+use App\Http\Controllers\Admin\SiswaController;
 
 // Daftar alias middleware 'role'
 Route::aliasMiddleware('role', RoleMiddleware::class);
 
 Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/datadudi', [DudiController::class, 'index'])->name('admin.datadudi');
+    Route::get('/datasiswa', [SiswaController::class, 'index'])->name('admin.datasiswa');
 
-    Route::view('/datasiswa', 'admin.datasiswa')->name('admin.datasiswa');
     Route::view('/dataguru', 'admin.dataguru')->name('admin.dataguru');
     Route::view('/dokumen', 'admin.dokumen')->name('admin.dokumen');
     Route::view('/nilai', 'admin.nilai')->name('admin.nilai');
@@ -25,21 +26,22 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     })->name('admin.dashboard');
 
     Route::resource('dudis', DudiController::class);
+    Route::resource('siswas', SiswaController::class);
 });
 
-Route::prefix('guru')->middleware(['auth', 'role:guru'])->group(function(){
+Route::prefix('guru')->middleware(['auth', 'role:guru'])->group(function () {
     Route::view('/bimbingan', 'guru.bimbingan')->name('guru.bimbingan');
     Route::view('/dokumen', 'guru.dokumen')->name('guru.dokumen');
     Route::view('/jurnal', 'guru.jurnal')->name('guru.jurnal');
     Route::view('/nilai', 'guru.nilai')->name('guru.nilai');
 });
 
-Route::prefix('dudi')->middleware(['auth', 'role:dudi'])->group(function(){
+Route::prefix('dudi')->middleware(['auth', 'role:dudi'])->group(function () {
     Route::view('/jurnal', 'dudi.jurnal')->name('dudi.jurnal');
     Route::view('/nilai', 'dudi.nilai')->name('dudi.nilai');
 });
 
-Route::prefix('murid')->middleware(['auth', 'role:siswa'])->group(function(){
+Route::prefix('murid')->middleware(['auth', 'role:siswa'])->group(function () {
     Route::view('/jurnal', 'murid.jurnal')->name('murid.jurnal');
     Route::view('/dokumen', 'murid.dokumen')->name('murid.dokumen');
 });
@@ -88,4 +90,4 @@ Route::middleware('auth')->group(function () {
 });
 
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

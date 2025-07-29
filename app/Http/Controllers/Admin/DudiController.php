@@ -31,7 +31,7 @@ class DudiController extends Controller
                 $dudi->email_perusahaan ?? '-',
                 $dudi->no_telepon_perusahaan ?? '-',
                 $dudi->nama_pic,
-                $dudi->deskripi ?? '-',
+                $dudi->deskripsi ?? '-',
                 '<a href="' . route('dudis.edit', $dudi->id) . '" class="text-blue-600 underline">Edit</a>',
             ];
         });
@@ -55,7 +55,7 @@ class DudiController extends Controller
             'email_perusahaan' => 'nullable|email|max:20',
             'no_telepon_perusahaan' => 'nullable|string|max:20',
             'nama_pic' => 'required|string|max:255',
-            'deskripi' => 'nullable|string',
+            'deskripsi' => 'nullable|string',
         ]);
 
         dudi::create($validated);
@@ -69,7 +69,7 @@ class DudiController extends Controller
             'email_perusahaan' => 'nullable|email|max:20',
             'no_telepon_perusahaan' => 'nullable|string|max:20',
             'nama_pic' => 'required|string|max:255',
-            'deskripi' => 'nullable|string',
+            'deskripsi' => 'nullable|string',
         ]);
 
         $dudi = Dudi::findOrFail($id);
