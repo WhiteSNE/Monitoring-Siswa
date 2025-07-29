@@ -24,7 +24,7 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
         return view('admin.dashboard');
     })->name('admin.dashboard');
 
-    Route::resource('dudis', DudiController::class)->only(['edit']);
+    Route::resource('dudis', DudiController::class);
 });
 
 Route::prefix('guru')->middleware(['auth', 'role:guru'])->group(function(){
@@ -52,7 +52,6 @@ Route::get('/', function () {
 
 // Admin only routes
 Route::middleware(['auth', 'role:admin'])->group(function () {
-    Route::resource('dudis', dudiController::class)->only(['index', 'edit']);
     Route::get('/admin/dashboard', function () {
         return view('admin.dashboard');
     })->name('admin.dashboard');

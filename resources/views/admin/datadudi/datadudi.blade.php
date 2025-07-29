@@ -3,7 +3,9 @@
 @section('content')
 <div class="p-6">
 <x-primary-button class="!bg-blue-600 h-8 w-40 justify-center">
-    <p class="text-sm">+ Tempat PKL</p>
+<a href="{{ route('dudis.create') }}">
+    + Tambah DUDI
+</a>
 </x-primary-button>
 <section class="flex flex-col justify-center gap-4 mt-5 w-full">
 <div class="flex flex-start h-20 bg-white rounded-md">
