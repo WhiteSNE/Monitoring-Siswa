@@ -1,4 +1,4 @@
-<header class="bg-gray-900 text-gray-600 px-6 py-4 flex justify-between items-center">
+<header class="bg-gray-900 text-gray-600 px-6 flex justify-between items-center">
     <h1 class="text-lg font-semibold">Dasboard Admin</h1>
     <div class="flex items-center space-x-2">
         <span>Admin</span>

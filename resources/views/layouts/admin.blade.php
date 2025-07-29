@@ -15,7 +15,7 @@
 </head>
 
 <body class="bg-gray-100 min-h-screen font-sans">
-    <div class="flex flex-col h-screen bg-white text-gray-600">
+    <div class="flex flex-col h-screen text-gray-600">
         @include('layouts.navigation')
 
         <div class="flex flex-1 overflow-hidden">

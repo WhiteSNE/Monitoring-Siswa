@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\DudiController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\RoleMiddleware;
@@ -8,15 +9,22 @@ use App\Http\Middleware\RoleMiddleware;
 Route::aliasMiddleware('role', RoleMiddleware::class);
 
 Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
+    Route::get('/datadudi', [DudiController::class, 'index'])->name('admin.datadudi');
+
     Route::view('/datasiswa', 'admin.datasiswa')->name('admin.datasiswa');
     Route::view('/dataguru', 'admin.dataguru')->name('admin.dataguru');
-    Route::view('/datadudi', 'admin.datadudi')->name('admin.datadudi');
     Route::view('/dokumen', 'admin.dokumen')->name('admin.dokumen');
     Route::view('/nilai', 'admin.nilai')->name('admin.nilai');
     Route::view('/role', 'admin.role')->name('admin.role');
     Route::view('/kelas', 'admin.kelas')->name('admin.kelas');
     Route::view('/jabatan', 'admin.jabatan')->name('admin.jabatan');
     Route::view('/jurusan', 'admin.jurusan')->name('admin.jurusan');
+
+    Route::get('/dashboard', function () {
+        return view('admin.dashboard');
+    })->name('admin.dashboard');
+
+    Route::resource('dudis', DudiController::class)->only(['edit']);
 });
 
 Route::prefix('guru')->middleware(['auth', 'role:guru'])->group(function(){
@@ -44,6 +52,7 @@ Route::get('/', function () {
 
 // Admin only routes
 Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::resource('dudis', dudiController::class)->only(['index', 'edit']);
     Route::get('/admin/dashboard', function () {
         return view('admin.dashboard');
     })->name('admin.dashboard');
