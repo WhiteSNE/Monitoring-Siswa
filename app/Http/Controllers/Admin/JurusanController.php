@@ -10,8 +10,22 @@ class JurusanController extends Controller
 {
     public function index()
     {
+        $headers =[
+            'No',
+            'Nama Jurusan',
+        ];
+
         $jurusans = jurusan::all();
-        return view('admin.jurusans.index', compact('jurusans'));
+
+        $rows = $jurusans->map(function($jurusans, $index){
+            return [
+                $index + 1,
+                $jurusans->nama_jurusan ?? '-',
+                '<a href="' . route('jurusans.edit', $jurusans->id) . '" class="text-blue-600 underline">Edit</a>',
+            ];
+        });
+        
+        return view('admin.jurusans.jurusan', compact('headers', 'rows'));
     }
 
     public function create()

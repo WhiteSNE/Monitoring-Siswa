@@ -10,8 +10,12 @@ class KelasController extends Controller
 {
     public function index()
     {
+        $headers = [
+            'No',
+            'Kelas',
+        ];
         $kelases = kelas::all();
-        return view('admin.kelases.index', compact('kelases'));
+        return view('admin.kelases.kelas', compact('kelases'));
     }
 
     public function create()

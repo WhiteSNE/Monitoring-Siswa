@@ -4,6 +4,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\RoleMiddleware;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\DudiController;
+use App\Http\Controllers\Admin\GuruController;
+use App\Http\Controllers\Admin\JurusanController;
+use App\Http\Controllers\Admin\KelasController;
 use App\Http\Controllers\Admin\SiswaController;
 
 // Daftar alias middleware 'role'
@@ -12,21 +15,25 @@ Route::aliasMiddleware('role', RoleMiddleware::class);
 Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/datadudi', [DudiController::class, 'index'])->name('admin.datadudi');
     Route::get('/datasiswa', [SiswaController::class, 'index'])->name('admin.datasiswa');
+    Route::get('/kelas', [KelasController::class, 'index'])->name('admin.kelas');
+    Route::get('jurusan', [JurusanController::class, 'index'])->name('admin.jurusan');
+    Route::get('/dataguru',[GuruController::class, 'index'])->name('admin.dataguru');
 
-    Route::view('/dataguru', 'admin.dataguru')->name('admin.dataguru');
     Route::view('/dokumen', 'admin.dokumen')->name('admin.dokumen');
     Route::view('/nilai', 'admin.nilai')->name('admin.nilai');
     Route::view('/role', 'admin.role')->name('admin.role');
-    Route::view('/kelas', 'admin.kelas')->name('admin.kelas');
     Route::view('/jabatan', 'admin.jabatan')->name('admin.jabatan');
-    Route::view('/jurusan', 'admin.jurusan')->name('admin.jurusan');
+
 
     Route::get('/dashboard', function () {
         return view('admin.dashboard');
     })->name('admin.dashboard');
 
+    Route::resource('gurus', GuruController::class);
     Route::resource('dudis', DudiController::class);
     Route::resource('siswas', SiswaController::class);
+    Route::resource('jurusans', JurusanController::class);
+    Route::resource('kelases', KelasController::class);
 });
 
 Route::prefix('guru')->middleware(['auth', 'role:guru'])->group(function () {
@@ -47,12 +54,12 @@ Route::prefix('murid')->middleware(['auth', 'role:siswa'])->group(function () {
 });
 
 
-// Default halaman login
+// halaman login
 Route::get('/', function () {
     return view('loginpage');
 });
 
-// Admin only routes
+// role default dashboard
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/dashboard', function () {
         return view('admin.dashboard');

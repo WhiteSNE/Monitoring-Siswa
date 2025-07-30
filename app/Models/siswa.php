@@ -11,12 +11,13 @@ class siswa extends Model
 {
     protected $fillable =[
         'user_id',
-        'nisn',
         'nama_lengkap',
+        'nisn',
+        'alamat',
+        'tanggal_lahir',
+        'no_telepon',
         'jurusan_id',
         'kelas_id',
-        'alamat',
-        'no_telepon',
     ];
 
     public function user(){

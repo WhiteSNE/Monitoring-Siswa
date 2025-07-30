@@ -16,7 +16,9 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->string('nip', 20)->unique();
             $table->string('nama_lengkap');
-            $table->string('no_telepon', 20)->nullable();
+            $table->date('tanggal_lahir');
+            $table->string('email')->unique()->nullable();
+            $table->string('no_telepon', 20);
             $table->timestamps();
         });
     }

@@ -32,7 +32,7 @@
 
     <div>
         <label>Deskripsi</label>
-        <textarea name="deskripi" class="w-full border rounded">{{ old('deskripi', $dudi->deskripi) }}</textarea>
+        <textarea name="deskripsi" class="w-full border rounded">{{ old('deskripi', $dudi->deskripi) }}</textarea>
     </div>
 
     <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded">Simpan</button>
