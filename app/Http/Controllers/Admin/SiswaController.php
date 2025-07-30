@@ -2,108 +2,81 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
+use App\Models\User;
+use App\Models\Kelas;
 use App\Models\Siswa;
 use App\Models\Jurusan;
-use App\Models\Kelas;
-use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 
 class SiswaController extends Controller
 {
     public function index()
     {
-        $headers = [
-            'No',
-            'NISN',
-            'Nama Lengkap',
-            'Tanggal Lahir',
-            'Email',
-            'No Telepon',
-            'Alamat',
-            'Jurusan',
-            'Kelas',
-            'Aksi',
-        ];
-
-        $siswas = Siswa::with(['jurusan', 'kelas', 'user'])->get();
-
-        $rows = $siswas->map(function ($siswa, $index) {
-            return [
-                $index + 1,
-                $siswa->nisn,
-                $siswa->nama_lengkap,
-                $siswa->tanggal_lahir ?? '-',
-                $siswa->user?->email ?? '-',
-                $siswa->no_telepon ?? '-',
-                $siswa->alamat ?? '-',
-                $siswa->jurusan?->nama_jurusan ?? '-',
-                $siswa->kelas?->nama_kelas ?? '-',
-                '<a href="' . route('siswas.edit', $siswa->id) . '" class="text-blue-600 underline">Edit</a>',
-            ];
-        });
-
-        return view('admin.datasiswa.datasiswa', compact('headers', 'rows'));
+        $siswas = Siswa::with(['jurusan', 'kelas'])->get();
+        return view('admin.datasiswa.datasiswa', compact('siswas'));
     }
 
     public function create()
     {
         $jurusans = Jurusan::all();
         $kelases = Kelas::all();
-        return view('admin.datasiswa.create', compact('jurusans', 'kelases'));
+        return view('admin.datasiswa.create', compact('jurusans', 'kelas'));
     }
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'nisn' => 'required|string|max:20|unique:siswas,nisn',
-            'nama_lengkap' => 'required|string|max:255',
+        $request->validate([
+            'nisn' => 'required|numeric|unique:users,username', // Cek unique di kolom username tabel users
+            'nama_siswa' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
             'tanggal_lahir' => 'required|date',
             'jurusan_id' => 'required|exists:jurusans,id',
             'kelas_id' => 'required|exists:kelas,id',
-            'alamat' => 'required|string',
-            'no_telepon' => 'nullable|string|max:20',
+            'jenis_kelamin' => 'required|in:L,P',
         ]);
 
-        $email = $validated['nisn'] . '@siswa.test';
+        DB::beginTransaction();
 
-        // Cek apakah user sudah ada
-        $existingUser = User::where('email', $email)->first();
-        if ($existingUser) {
-            return redirect()->back()->withErrors(['email' => 'User dengan NISN tersebut sudah ada.']);
+        try {
+            // 3. Buat User baru
+            $user = User::create([
+                'name' => $request->nama_siswa,
+                'username' => $request->nisn, // NISN disimpan sebagai username
+                'email' => $request->email,
+                'password' => Hash::make($request->tanggal_lahir), // Password default dari tgl lahir
+                'role' => 'siswa', // Role otomatis
+            ]);
+
+            // 4. Buat Siswa baru dan hubungkan dengan User
+            Siswa::create([
+                'user_id' => $user->id, // <-- Kunci penghubung
+                'nisn' => $request->nisn,
+                'nama_siswa' => $request->nama_siswa,
+                'tanggal_lahir' => $request->tanggal_lahir,
+                'jurusan_id' => $request->jurusan_id,
+                'kelas_id' => $request->kelas_id,
+                'jenis_kelamin' => $request->jenis_kelamin,
+                'no_telp' => $request->no_telp,
+                'alamat' => $request->alamat,
+            ]);
+
+            DB::commit(); // Simpan perubahan jika semua berhasil
+
+            return redirect()->route('admin.datasiswa.index')->with('success', 'Siswa berhasil ditambahkan.');
+        } catch (\Exception $e) {
+            DB::rollBack(); // Batalkan semua jika ada error
+            return redirect()->back()->with('error', 'Gagal menambahkan siswa. Error: ' . $e->getMessage())->withInput();
         }
-
-        // Buat user baru
-        $user = User::create([
-            'name' => $validated['nama_lengkap'],
-            'email' => $email,
-            'password' => Hash::make(date('Ymd', strtotime($validated['tanggal_lahir']))),
-            'role' => 'siswa',
-        ]);
-
-        // Buat data siswa
-        Siswa::create([
-            'user_id' => $user->id,
-            'nisn' => $validated['nisn'],
-            'nama_lengkap' => $validated['nama_lengkap'],
-            'tanggal_lahir' => $validated['tanggal_lahir'],
-            'jurusan_id' => $validated['jurusan_id'],
-            'kelas_id' => $validated['kelas_id'],
-            'alamat' => $validated['alamat'],
-            'no_telepon' => $validated['no_telepon'] ?? null,
-        ]);
-
-        return redirect()->route('siswas.index')->with('success', 'Data siswa berhasil ditambahkan.');
     }
 
     public function edit($id)
     {
-        $siswa = Siswa::findOrFail($id);
         $jurusans = Jurusan::all();
-        $kelases = Kelas::all();
-
-        return view('admin.datasiswa.edit', compact('siswa', 'jurusans', 'kelases'));
+        $kelas = Kelas::all();
+        return view('admin.datasiswa.edit', compact('siswa', 'jurusans', 'kelass'));
     }
 
     public function update(Request $request, $id)

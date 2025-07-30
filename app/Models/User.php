@@ -19,8 +19,10 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'username',
         'email',
         'password',
+        'role',
     ];
 
     /**
@@ -46,19 +48,23 @@ class User extends Authenticatable
         ];
     }
 
-    public function isAdmin(): bool{
+    public function isAdmin(): bool
+    {
         return $this->role === 'admin';
     }
 
-    public function guru(){
+    public function guru()
+    {
         return $this->hasOne(Guru::class);
     }
-    
-    public function siswa(){
+
+    public function siswa()
+    {
         return $this->hasOne(Siswa::class);
     }
 
-    public function dudi(){
+    public function dudi()
+    {
         return $this->hasOne(Dudi::class);
     }
 }

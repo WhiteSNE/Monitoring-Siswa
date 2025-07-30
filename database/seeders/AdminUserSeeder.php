@@ -11,33 +11,33 @@ class AdminUserSeeder extends Seeder
     public function run(): void
     {
         User::updateOrCreate([
-            'email' => 'admin@examp.com',
-        ], [
             'name' => 'Super Admin',
-            'password' => Hash::make('admin123'), // Ganti dengan password aman!
+            'username' => 'Admin',
+            'email' => 'admin@examp.com',
             'role' => 'admin',
-        ]);
-
-        User::updateOrCreate([
-            'email' => 'guru@examp.com',
-        ], [
-            'name' => 'Guru',
             'password' => Hash::make('admin123'), // Ganti dengan password aman!
-            'role' => 'guru',
         ]);
 
         User::updateOrCreate([
+            'name' => 'Guru',
+            'username' => 'guru',
+            'email' => 'guru@examp.com',
+            'role' => 'guru',
+            'password' => Hash::make('admin123'), // Ganti dengan password aman!
+        ]);
+
+        User::updateOrCreate([
+            'name' => 'Dudi',
+            'username' => 'dudi',
             'email' => 'dudi@examp.com',
-        ], [
-            'name' => 'dudi',
             'password' => Hash::make('admin123'), // Ganti dengan password aman!
             'role' => 'dudi',
         ]);
 
         User::updateOrCreate([
+            'name' => 'Murid',
+            'username' => 'murid',
             'email' => 'murid@examp.com',
-        ], [
-            'name' => 'murid',
             'password' => Hash::make('admin123'), // Ganti dengan password aman!
             'role' => 'siswa',
         ]);
